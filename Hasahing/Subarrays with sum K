@@ -1,0 +1,113 @@
+Here’s the plain text version of your solution, formatted for inclusion in a GitHub repository, while avoiding Markdown-specific rendering issues:
+
+---
+
+**Problem Name:** Count Subarrays with Sum Equal to \( k \)  
+**Date:** 02-01-2025  
+**Platform:** GeeksforGeeks (GFG)  
+**Difficulty:** Medium  
+
+---
+
+### Problem Understanding  
+
+**Input:**  
+- An array `arr[]` of integers.  
+- An integer `k` representing the target sum.  
+
+**Output:**  
+- An integer representing the number of subarrays with a sum equal to \( k \).  
+
+**Constraints:**  
+- The array size and values can vary widely, so the solution should handle both small and large arrays efficiently.  
+
+**Edge Cases:**  
+- \( k = 0 \).  
+- All elements in `arr[]` are negative or positive.  
+- Subarrays starting at index 0.  
+
+---
+
+### Approach  
+
+#### 1. Initial Thoughts  
+- Use a brute-force method to calculate sums for every subarray.  
+- However, this would result in \( O(n^2) \) complexity and would be inefficient for large arrays.  
+
+#### 2. Optimal Solution  
+- Utilize a **HashMap** to store prefix sums and their frequencies.  
+- For every element, calculate the cumulative sum.  
+- Check if \( \text{sum} - k \) exists in the HashMap, as it indicates a subarray ending at the current index with the desired sum.  
+
+---
+
+### Steps in Optimal Solution  
+
+1. Initialize a variable `sum` to store the cumulative sum.  
+2. Use a `HashMap` to track the frequency of prefix sums.  
+3. Traverse the array:  
+   - Add the current element to `sum`.  
+   - Check if \( \text{sum} = k \), and increment the count if true.  
+   - Check if \( \text{sum} - k \) exists in the `HashMap`. If it does, add its frequency to the result.  
+   - Update the `HashMap` with the current sum.  
+
+---
+
+### Time/Space Complexity  
+
+- **Time Complexity:** \( O(n) \), where \( n \) is the size of the array.  
+- **Space Complexity:** \( O(n) \), due to the storage of prefix sums in the `HashMap`.  
+
+---
+
+### Code Template  
+
+```java
+public int countSubarrays(int arr[], int k) {
+    int sum = 0;  // Cumulative sum
+    int ans = 0;  // Number of valid subarrays
+    Map<Integer, Integer> prefixSumMap = new HashMap<>();
+
+    for (int i : arr) {
+        sum += i;
+
+        // If the cumulative sum is equal to k
+        if (sum == k) ans++;
+
+        // Check if (sum - k) exists in the map
+        ans += prefixSumMap.getOrDefault(sum - k, 0);
+
+        // Update the map with the current sum
+        prefixSumMap.put(sum, prefixSumMap.getOrDefault(sum, 0) + 1);
+    }
+
+    return ans;
+}
+```
+
+---
+
+### Similar Problems  
+
+1. Subarray Sum Equals \( k \) (LeetCode).  
+2. Longest Subarray with Sum \( k \).  
+
+---
+
+### Review Notes  
+
+**Key Insights:**  
+- The difference between the current cumulative sum and \( k \) helps identify potential subarrays.  
+- HashMap allows \( O(1) \) average time complexity for lookup operations.  
+
+**Common Mistakes:**  
+- Forgetting to account for subarrays starting at index 0.  
+- Incorrectly updating the HashMap frequency counts.  
+
+**Optimization Tips:**  
+- If the input size is very large, use data structures with lower memory overhead.  
+- Test edge cases like an empty array or all elements being the same.  
+
+---
+
+Let me know if you need help refining this further!
