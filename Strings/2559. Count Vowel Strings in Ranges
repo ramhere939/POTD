@@ -1,0 +1,119 @@
+Here’s how you can format and refine the information into a structured and clean documentation for a GitHub repository, keeping both the explanation and the code intact:
+
+---
+
+# Problem: Counting Vowel Strings in Subranges
+
+**Date**: [02-01-25]  
+**Platform**: [LeetCode]  
+**Difficulty**: Easy  
+
+---
+
+## Problem Understanding
+
+- **Input/Output Format**:
+  - **Input**:
+    - `words`: An array of strings.
+    - `queries`: A 2D array where each query specifies a range `[l, r]`.
+  - **Output**:
+    - An array of integers, where each value represents the count of strings in the specified range that start and end with vowels.
+
+- **Constraints**:
+  - 1 ≤ `words.length`, `queries.length` ≤ \(10^5\).
+  - Each word contains only lowercase English letters.
+
+- **Edge Cases**:
+  - No words start or end with vowels.
+  - Large query ranges.
+  - Queries where `l == r`.
+
+---
+
+## Approach
+
+### 1. Initial Thoughts
+- Use a helper function to check if a word starts and ends with vowels.
+- Use a prefix sum to preprocess counts for efficient range query handling.
+
+### 2. Optimal Solution
+- Precompute a prefix sum array based on whether words start and end with vowels.
+- Use the prefix sum to calculate the result for each query in constant time.
+
+---
+
+## Time/Space Complexity
+
+- **Preprocessing**: \(O(n)\) — for building the prefix sum array.
+- **Answering Queries**: \(O(m)\) — one operation per query.
+- **Overall**: \(O(n + m)\).
+- **Space Complexity**: \(O(n)\) — for the prefix sum array.
+
+---
+
+## Code Template
+
+```java
+import java.util.*;
+
+public class Solution {
+    public int[] vowelStrings(String[] words, int[][] queries) {
+        int n = words.length;
+        int[] prefixSum = new int[n];
+        
+        // Step 1: Build prefix sum array
+        prefixSum[0] = isVowel(words[0]);
+        for (int i = 1; i < n; i++) {
+            prefixSum[i] = prefixSum[i - 1] + isVowel(words[i]);
+        }
+        
+        // Step 2: Answer queries
+        int m = queries.length;
+        int[] ans = new int[m];
+        for (int i = 0; i < m; i++) {
+            int l = queries[i][0];
+            int r = queries[i][1];
+            int res = prefixSum[r];
+            if (l != 0) {
+                res -= prefixSum[l - 1];
+            }
+            ans[i] = res;
+        }
+        return ans;
+    }
+
+    private int isVowel(String word) {
+        HashSet<Character> set = new HashSet<>(Arrays.asList('a', 'e', 'i', 'o', 'u'));
+        char first = word.charAt(0);
+        char last = word.charAt(word.length() - 1);
+        return (set.contains(first) && set.contains(last)) ? 1 : 0;
+    }
+}
+```
+
+---
+
+## Similar Problems
+
+1. [Range Sum Query - Immutable (LeetCode)]  
+2. [Counting Words Matching a Condition (LeetCode)]  
+
+---
+
+## Review Notes
+
+- **Key Insights**:
+  - Prefix sum simplifies range queries and reduces computational overhead.
+  - Use helper functions to encapsulate repetitive logic like vowel checking.
+
+- **Common Mistakes**:
+  - Forgetting to subtract `prefixSum[l-1]` for non-zero `l` values.
+  - Mismanaging edge cases where ranges are invalid or overlap incorrectly.
+
+- **Optimization Tips**:
+  - Replace `HashSet` with direct vowel checks for better performance.
+  - Ensure input validation for query ranges.
+
+---
+
+This structure ensures clarity and is well-suited for a GitHub repository with comprehensive documentation. Let me know if you'd like any further adjustments!
