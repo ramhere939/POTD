@@ -1,0 +1,101 @@
+Your code correctly counts the number of valid ways to split the array such that the sum of the left subarray is at least half of the total sum. Below is a well-structured markdown version of your problem note, ensuring proper formatting for a GitHub repository.
+
+---
+
+# Ways to Split Array  
+
+**Date:** 03-01-2025  
+**Platform:** LeetCode  
+**Difficulty:** Medium  
+
+---
+
+## Problem Understanding  
+
+### **Input:**  
+- An integer array `nums` of length `n`.  
+
+### **Output:**  
+- An integer representing the number of valid splits.  
+
+### **Constraints:**  
+- \( 2 \leq nums.length \leq 10^5 \)  
+- \( -10^7 \leq nums[i] \leq 10^7 \)  
+
+### **Edge Cases:**  
+- Large positive/negative numbers causing overflow.  
+- Edge case when `nums.length == 2`.  
+
+---
+
+## Approach  
+
+### **1. Initial Thoughts**  
+- The problem requires checking how many indices allow a valid split where the left sum is at least half of the total sum.  
+- A brute-force solution checking all possible splits would be inefficient (\(O(n^2)\)).  
+- Using a prefix sum approach is a natural way to optimize the solution.  
+
+### **2. Optimal Solution**  
+- Compute the total sum of the array first.  
+- Iterate over the array while maintaining a running sum (`left`).  
+- At each index, check if `2 * left >= total`.  
+- The solution runs in **O(n) time complexity**, which is optimal.  
+
+---
+
+## **Time & Space Complexity**  
+- **Time Complexity:** \( O(n) \) (Single pass for total sum + Single pass for checking splits)  
+- **Space Complexity:** \( O(1) \) (Constant extra space)  
+
+---
+
+## Code Template  
+
+```java
+public int waysToSplitArray(int[] nums) {
+    long total = 0, left = 0;
+    
+    // Compute the total sum
+    for (int num : nums) {
+        total += num;
+    }
+    
+    int count = 0;
+    for (int i = 0; i < nums.length - 1; i++) { // We cannot split at the last index
+        left += nums[i];
+        
+        // Check if left sum is at least half of the total
+        if (2 * left >= total) {
+            count++;
+        }
+    }
+    
+    return count;
+}
+```
+
+---
+
+## Similar Problems  
+1. [Split Array Largest Sum (LeetCode)]  
+2. [Partition Array Into Disjoint Intervals]  
+
+---
+
+## Review Notes  
+
+### **Key Insights:**  
+- The **prefix sum** approach ensures an efficient O(n) solution.  
+- Instead of dividing by 2 (which can lead to precision issues with integers), we use `2 * left >= total`.  
+
+### **Common Mistakes:**  
+- Not handling large integer values correctly (using `long` prevents overflow).  
+- Off-by-one errors in the loop (`i < nums.length - 1` ensures we don’t split at the last index).  
+
+### **Optimization Tips:**  
+- Since only `total` and `left` are needed, using extra space for an explicit prefix sum array is unnecessary.  
+- Using **early termination** in cases where the condition is already met in the majority of the array may slightly improve runtime.  
+
+---
+
+This markdown version ensures clarity and readability when added to a GitHub repository. Let me know if you need further improvements! 🚀
