@@ -1,0 +1,113 @@
+Count Unique Length-3 Palindromic Subsequences  
+
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: A string s consisting of lowercase English letters.  
+- Output: Return the number of unique length-3 palindromic subsequences in s.  
+- Constraints:  
+  - 3 ≤ s.length ≤ 100000  
+  - s consists only of lowercase English letters.  
+- Edge Cases:  
+  - s contains all distinct characters (no valid palindromic subsequences).  
+  - s has repeating characters but no valid length-3 palindromes.  
+  - s has multiple overlapping valid palindromic subsequences.  
+
+Approach  
+
+1. Brute Force Approach (Nested Loops - O(n³))  
+   - Iterate through all pairs (i, j) in s where i < j.  
+   - Check for valid palindromic subsequences by ensuring at least one character exists between s[i] and s[j].  
+   - Store the unique palindromes in a HashSet to count them.  
+   - This approach leads to an O(n³) time complexity, making it inefficient for large inputs.  
+
+2. Optimized Approach (Tracking First and Last Occurrences - O(n²))  
+   - Use a HashSet to store unique characters in s.  
+   - Use two arrays (firstOcc and lastOcc) of size 26 to store the first and last occurrence of each character in s.  
+   - Iterate through s to fill firstOcc and lastOcc.  
+   - For each character in s, count the unique characters between firstOcc and lastOcc using a HashSet.  
+   - This reduces time complexity to O(26 * n) ≈ O(n²), making it significantly more efficient than brute force.  
+
+3. Best Approach (Optimized with Arrays - O(n))  
+   - Instead of using a HashSet, use a boolean array of size 26 to track unique middle characters.  
+   - Eliminating the HashSet reduces lookup overhead, making this the fastest approach with O(n) time complexity and O(1) space complexity.  
+
+Code Implementations  
+
+Brute Force (O(n³))  
+```java
+public int countPalindromicSubsequence(String s) {
+    Set<Character> set = new HashSet<>();
+    for (char x : s.toCharArray()) {
+        set.add(x);
+    }
+    int count = 0;
+    for (char y : set) {
+        int first = -1, last = -1;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == y) {
+                if (first == -1) first = i;
+                last = i;
+            }
+        }
+        if (first == last) continue;
+        Set<Character> ans = new HashSet<>();
+        for (int i = first + 1; i < last; i++) {
+            ans.add(s.charAt(i));
+        }
+        count += ans.size();
+    }
+    return count;
+}
+```  
+
+Optimized Approach (O(n²))  
+```java
+public int countPalindromicSubsequence(String s) {  
+    Set<Character> set = new HashSet<>();  
+    int[] firstOcc = new int[26];  
+    int[] lastOcc = new int[26];  
+    Arrays.fill(firstOcc, -1);  
+    Arrays.fill(lastOcc, -1);  
+
+    for (int x = 0; x < s.length(); x++) {  
+        set.add(s.charAt(x));  
+        char p = s.charAt(x);  
+        if (firstOcc[p - 'a'] == -1) firstOcc[p - 'a'] = x;  
+        lastOcc[p - 'a'] = x;  
+    }  
+
+    int count = 0;  
+    for (char y : set) {  
+        int first = firstOcc[y - 'a'];  
+        int last = lastOcc[y - 'a'];  
+        if (first == last) continue;  
+        Set<Character> ans = new HashSet<>();  
+        for (int i = first + 1; i < last; i++) {  
+            ans.add(s.charAt(i));  
+        }  
+        count += ans.size();  
+    }  
+    return count;  
+}
+```  
+
+Similar Problems  
+- Longest Palindromic Subsequence  
+- Palindromic Substrings  
+
+Review Notes  
+
+Key Insights  
+- Using arrays instead of iterating through s repeatedly significantly optimizes performance.  
+- The first and last occurrence of a character determines possible valid palindromes.  
+
+Common Mistakes  
+- Forgetting to handle cases where a character appears only once (first == last).  
+- Not initializing firstOcc and lastOcc properly, which can lead to incorrect indexing.  
+
+Optimization Tips  
+- The best approach eliminates HashSets and uses a boolean array instead, reducing lookup overhead.  
+- This method is cache-friendly and outperforms other solutions for large inputs.
