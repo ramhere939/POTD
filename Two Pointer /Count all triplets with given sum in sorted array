@@ -1,0 +1,93 @@
+Count Unique Triplets with Given Sum  
+
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: An integer array `arr` and an integer target `t`.  
+- Output: Return the number of unique triplets `(i, j, k)` such that `arr[i] + arr[j] + arr[k] == t`.  
+- Constraints:  
+  - The length of `arr` is at least 3.  
+  - Elements in `arr` can be negative, zero, or positive.  
+  - The array may contain duplicate elements.  
+- Edge Cases:  
+  - `arr` contains all negative numbers, making `t` unreachable.  
+  - `arr` contains multiple duplicate values.  
+  - `arr` has exactly three elements forming `t`.  
+
+Approach  
+
+1. Initial Thoughts  
+   - A brute-force solution would involve three nested loops, leading to an O(n³) complexity.  
+   - Sorting the array allows us to use a **two-pointer approach**, reducing complexity to O(n²).  
+   - Handling duplicate values efficiently is crucial to avoid overcounting.  
+
+2. Optimized Approach (Two-Pointer Technique)  
+   - First, sort `arr` to simplify searching.  
+   - Iterate through the array, fixing one element `arr[i]`.  
+   - Use two pointers (`j` and `k`) to find pairs that sum with `arr[i]` to form `t`.  
+   - If `sum > t`, move the right pointer `k` left.  
+   - If `sum < t`, move the left pointer `j` right.  
+   - If `sum == t`, count occurrences of `arr[j]` and `arr[k]` to determine the number of valid triplets.  
+   - This approach runs in **O(n²) time** with **O(1) extra space**.  
+
+3. Time & Space Complexity  
+   - Time Complexity: **O(n²)** due to sorting and the two-pointer approach.  
+   - Space Complexity: **O(1)** since we only use a few extra variables.  
+
+Code Implementation  
+```java
+public int countTriplets(int[] arr, int t) {
+    int n = arr.length;
+    int res = 0;
+    Arrays.sort(arr); // Sorting enables two-pointer approach
+    for (int i = 0; i < n - 2; i++) {
+        int j = i + 1, k = n - 1;
+        while (j < k) {
+            int sum = arr[i] + arr[j] + arr[k];
+            if (sum > t) {
+                k--;
+            } else if (sum < t) {
+                j++;
+            } else { 
+                int cnt1 = 0, cnt2 = 0;
+                int ele1 = arr[j], ele2 = arr[k];
+
+                while (j <= k && arr[j] == ele1) {
+                    cnt1++;
+                    j++;
+                }
+                while (j <= k && arr[k] == ele2) {
+                    cnt2++;
+                    k--;
+                }
+                if (ele1 == ele2) {
+                    res += (cnt1 * (cnt1 - 1)) / 2;
+                } else {
+                    res += cnt1 * cnt2;
+                }
+            }
+        }
+    }
+    return res;
+}
+```  
+
+Similar Problems  
+- Three Sum  
+- Count Unique Pairs with Given Sum  
+
+Review Notes  
+
+Key Insights  
+- Sorting simplifies handling duplicates and enables an efficient two-pointer approach.  
+- Avoiding nested loops significantly improves performance compared to brute force.  
+
+Common Mistakes  
+- Forgetting to handle duplicate values properly, leading to incorrect counts.  
+- Not considering negative numbers, which may affect the total sum calculation.  
+
+Optimization Tips  
+- Sorting helps reduce complexity but should be optimized for large inputs.  
+- A HashMap-based approach can be used for variations where a unique count is required instead of triplet indices.
