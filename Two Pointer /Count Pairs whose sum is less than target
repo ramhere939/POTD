@@ -1,0 +1,72 @@
+Count Pairs with Sum Less Than Target  
+
+Date: 05-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: An integer array `arr` and an integer `target`.  
+- Output: Return the number of pairs `(i, j)` such that `arr[i] + arr[j] < target`.  
+- Constraints:  
+  - The length of `arr` is at least 2.  
+  - Elements in `arr` can be negative, zero, or positive.  
+  - The array may contain duplicate elements.  
+- Edge Cases:  
+  - `arr` contains all negative numbers.  
+  - `arr` has only two elements forming a valid pair.  
+  - `arr` contains duplicate values affecting the count.  
+
+Approach  
+
+1. Initial Thoughts  
+   - A brute-force approach would involve **checking all pairs using nested loops**, leading to **O(n²) complexity**.  
+   - Sorting allows for an **efficient two-pointer approach**, reducing time complexity to **O(n log n)** (due to sorting) + **O(n)** (for the two-pointer search).  
+
+2. Optimized Approach (Two-Pointer Technique)  
+   - First, **sort** `arr` to facilitate efficient searching.  
+   - Use **two pointers**, one at the start (`l`) and one at the end (`r`).  
+   - If `arr[l] + arr[r] < target`, then all elements from `l` to `r` form valid pairs, so add `(r - l)` to `cnt` and move `l` forward.  
+   - If `arr[l] + arr[r] >= target`, move `r` backward.  
+   - This approach runs in **O(n log n) time** due to sorting and **O(1) space**.  
+
+3. Time & Space Complexity  
+   - **Time Complexity:** **O(n log n)** due to sorting and an **O(n)** two-pointer scan.  
+   - **Space Complexity:** **O(1)** as only a few extra variables are used.  
+
+Code Implementation  
+```java
+int countPairs(int arr[], int target) {
+    Arrays.sort(arr); // Sorting enables two-pointer approach
+    int l = 0, r = arr.length - 1, cnt = 0;
+    
+    while (l < r) {
+        int sum = arr[l] + arr[r];
+        if (sum < target) {
+            cnt += r - l; // All elements between l and r form valid pairs
+            l++;
+        } else {
+            r--; // Reduce sum by moving right pointer left
+        }
+    }
+    
+    return cnt;
+}
+```  
+
+Similar Problems  
+- Two Sum Less Than Target  
+- Three Sum Closest  
+
+Review Notes  
+
+Key Insights  
+- Sorting allows us to efficiently count pairs without checking all combinations explicitly.  
+- Instead of iterating over all pairs, the two-pointer approach eliminates unnecessary comparisons.  
+
+Common Mistakes  
+- Forgetting to **sort** the array before applying the two-pointer method.  
+- Incorrectly updating the count, leading to an **off-by-one** error.  
+
+Optimization Tips  
+- If frequent queries are required, **using a Binary Indexed Tree (BIT) or segment tree** can speed up pair counting.  
+- If sorting is expensive, **using a HashMap** may help in cases where exact element occurrences matter.
