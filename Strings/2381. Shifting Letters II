@@ -1,0 +1,87 @@
+Shifting Letters II  
+
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: A string `s` and a 2D array `shifts`, where each element `[start, end, direction]` represents shifting all characters from index `start` to `end`.  
+  - If `direction = 1`, shift forward (right) in the alphabet.  
+  - If `direction = 0`, shift backward (left) in the alphabet.  
+- Output: Return the final modified string after all shifts are applied.  
+- Constraints:  
+  - `s` consists of only lowercase English letters.  
+  - The length of `s` is at most **10⁵**.  
+  - The length of `shifts` is at most **10⁵**.  
+- Edge Cases:  
+  - `s` contains all the same characters.  
+  - All shifts apply to the entire string.  
+  - Some characters undergo multiple shifts, requiring modulo 26 calculations.  
+
+Approach  
+
+1. Initial Thoughts  
+   - A **brute-force** approach would apply each shift individually, leading to **O(n × m)** complexity, which is inefficient for large inputs.  
+   - Instead, we use a **difference array technique**, allowing us to **efficiently track shifts** and apply them in **O(n + m) time**.  
+
+2. Optimized Approach (Difference Array + Prefix Sum)  
+   - **Use a difference array (`arr`)** to store the net shifts for each character.  
+   - Process each shift efficiently by incrementing/decrementing at start and end indices.  
+   - Compute the **prefix sum** to get the net shift for each character.  
+   - Convert the final shifts into character transformations using modulo 26.  
+   - This approach reduces the time complexity to **O(n + m)**, making it optimal.  
+
+3. Time & Space Complexity  
+   - **Time Complexity:** **O(n + m)** (Processing shifts in O(m), applying shifts in O(n)).  
+   - **Space Complexity:** **O(n)** (Using an auxiliary array for tracking shifts).  
+
+Code Implementation  
+```java
+public String shiftingLetters(String s, int[][] shifts) {
+    int n = s.length();
+    int[] arr = new int[n];
+
+    for (int[] shift : shifts) {
+        if (shift[2] == 1) { // Forward shift
+            arr[shift[0]]++;
+            if (shift[1] + 1 < n) {
+                arr[shift[1] + 1]--;
+            }
+        } else { // Backward shift
+            arr[shift[0]]--;
+            if (shift[1] + 1 < n) {
+                arr[shift[1] + 1]++;
+            }
+        }
+    }
+
+    StringBuilder result = new StringBuilder(s);
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum = (sum + arr[i]) % 26;  
+        if (sum < 0) sum += 26; 
+        char shiftedChar = (char) ('a' + ((s.charAt(i) - 'a' + sum) % 26));
+        result.setCharAt(i, shiftedChar);
+    }
+    
+    return result.toString();
+}
+```  
+
+Similar Problems  
+- Range Addition (LeetCode)  
+- Shifting Letters I  
+
+Review Notes  
+
+Key Insights  
+- **Difference arrays** allow range updates in constant time, making the approach efficient.  
+- **Modulo 26 arithmetic** ensures shifts wrap around within the English alphabet.  
+
+Common Mistakes  
+- Forgetting to handle **negative shifts** properly using `sum += 26` to keep values non-negative.  
+- Not applying **prefix sum** correctly, leading to incorrect character shifts.  
+
+Optimization Tips  
+- This approach **scales well for large inputs** and is significantly faster than applying shifts one by one.  
+- Using **mutable StringBuilder** instead of string concatenation improves performance.
