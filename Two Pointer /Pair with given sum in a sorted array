@@ -1,0 +1,83 @@
+
+
+countPairs function finds the number of unique pairs in a sorted array that sum up to a given target t.  
+
+Problem Understanding  
+- Input: A sorted integer array arr and an integer target t.  
+- Output: Return the number of unique pairs (i, j) such that arr[i] + arr[j] = t.  
+- Constraints:  
+  - The array is sorted in non-decreasing order.  
+  - There may be duplicate elements in the array.  
+- Edge Cases:  
+  - The array contains all the same elements.  
+  - No pairs sum up to t.  
+  - Multiple occurrences of the same number contribute to valid pairs.  
+
+Approach  
+
+1. Two-pointer technique  
+   - Use two pointers: one starting from the left (i) and one from the right (j).  
+   - If the sum of arr[i] and arr[j] is equal to t, count the number of occurrences of both elements and calculate valid pairs.  
+   - If arr[i] and arr[j] are the same, use the formula (freq * (freq - 1)) / 2 to count pairs and break the loop.  
+   - Otherwise, multiply the count of occurrences from both ends and add to the result.  
+   - If the sum is less than t, increment i.  
+   - If the sum is greater than t, decrement j.  
+
+2. Time & Space Complexity  
+   - Time Complexity: O(n), as each element is processed at most once.  
+   - Space Complexity: O(1), as only a few integer variables are used.  
+
+Code Implementation  
+```java
+int countPairs(int arr[], int t) {
+    int i = 0, j = arr.length - 1;
+    int count = 0;
+    
+    while (i < j) {
+        if (arr[i] + arr[j] == t) {
+            if (arr[i] == arr[j]) {
+                int freq = j - i + 1;
+                count += (freq * (freq - 1)) / 2;
+                break;
+            }
+            
+            int leftCount = 1, rightCount = 1;
+            while (i + 1 < j && arr[i] == arr[i + 1]) {
+                leftCount++;
+                i++;
+            }
+            while (j - 1 > i && arr[j] == arr[j - 1]) {
+                rightCount++;
+                j--;
+            }
+            
+            count += leftCount * rightCount;
+            i++;
+            j--;
+        } else if (arr[i] + arr[j] < t) {
+            i++;
+        } else {
+            j--;
+        }
+    }
+    
+    return count;
+}
+```  
+
+Similar Problems  
+- Two Sum in a sorted array  
+- Count pairs with a given sum  
+
+Review Notes  
+Key Insights  
+- Using two pointers reduces the time complexity to O(n) instead of O(n²).  
+- Handling duplicates correctly ensures that all valid pairs are counted.  
+
+Common Mistakes  
+- Not considering cases where arr[i] == arr[j], which requires a special formula to count valid pairs.  
+- Failing to move pointers correctly when processing duplicate elements.  
+
+Optimization Tips  
+- Since the array is sorted, a hash map is unnecessary.  
+- This approach works efficiently even for large inputs.
