@@ -1,0 +1,37 @@
+prefixCount function counts the number of strings in the given words array that start with the specified prefix pref.  
+
+problem understanding  
+- input: an array of strings words and a string pref.  
+- output: return the count of words that start with pref.  
+- constraints:  
+  each word in words contains only lowercase english letters.  
+  pref is a non-empty string.  
+- edge cases:  
+  words array is empty.  
+  no word starts with pref.  
+  all words start with pref.  
+
+approach  
+
+1. iterate through each word in the words array.  
+2. check if the word’s length is greater than or equal to pref’s length.  
+3. extract the substring from the beginning of the word up to pref’s length.  
+4. compare it with pref and increment the count if they match.  
+
+alternative approach  
+- instead of substring(), the startsWith() method can be used for better readability.  
+
+time and space complexity  
+- time complexity: o(n * m), where n is the number of words and m is the length of pref.  
+- space complexity: o(1), as only a counter variable is used.  
+
+code implementation  
+```java
+public int prefixCount(String[] words, String pref) { 
+    int count = 0;
+    for (String str : words) {
+        if (str.startsWith(pref)) count++;
+    }   
+    return count;
+}
+```
