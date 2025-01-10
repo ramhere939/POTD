@@ -1,0 +1,56 @@
+countDistinct function calculates the number of distinct elements in every subarray of size k.  
+
+problem understanding  
+- input: an integer array arr and an integer k representing the window size.  
+- output: return an arraylist containing the count of distinct elements in each sliding window of size k.  
+- constraints:  
+  1 ≤ k ≤ arr.length.  
+  arr contains positive integers.  
+- edge cases:  
+  k is equal to the length of arr.  
+  all elements in arr are distinct.  
+  all elements in arr are the same.  
+
+approach  
+
+1. use a hashmap ans to store the frequency of elements in the current window.  
+2. initialize the first window by iterating through the first k elements and store the count of distinct elements.  
+3. slide the window by removing the first element (outgoing) and adding the next element (incoming).  
+4. update the hashmap accordingly:  
+   - decrease or remove the count of the outgoing element.  
+   - increase the count of the incoming element.  
+5. store the distinct element count in the result list after each window slide.  
+
+time and space complexity  
+- time complexity: o(n), as each element is processed once in the sliding window approach.  
+- space complexity: o(k), due to the hashmap storing at most k elements at a time.  
+
+code implementation  
+```java
+ArrayList<Integer> countDistinct(int arr[], int k) {
+    Map<Integer, Integer> ans = new HashMap<>();
+    ArrayList<Integer> res = new ArrayList<>();
+    int i = 0, j = 0;
+    int n = arr.length;
+
+    while (i < k) {
+        ans.put(arr[i], ans.getOrDefault(arr[i], 0) + 1);
+        i++;
+    }
+    res.add(ans.size());
+
+    while (i < n) {
+        int out = arr[j];
+        if (ans.get(out) == 1) {
+            ans.remove(out);
+        } else {
+            ans.put(out, ans.get(out) - 1);
+        }
+        ans.put(arr[i], ans.getOrDefault(arr[i], 0) + 1);
+        i++;
+        j++;
+        res.add(ans.size());
+    }
+    return res;
+}
+```
