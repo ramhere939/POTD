@@ -1,0 +1,59 @@
+wordSubsets function determines which words from words1 are universal with respect to words2.  
+
+problem understanding  
+- input: two string arrays words1 and words2.  
+- output: return a list of words from words1 that are universal, meaning they contain all characters of every word in words2 with at least the required frequency.  
+- constraints:  
+  words1 and words2 contain lowercase english letters.  
+  words2 has fewer words than words1.  
+- edge cases:  
+  words1 contains no universal words.  
+  words2 contains duplicate letters in words.  
+  words1 has words shorter than any word in words2.  
+
+approach  
+
+1. compute the maximum frequency of each character required by any word in words2 and store it in an array freq of size 26.  
+2. iterate through each word in words2, get its character frequency using getFreq, and update freq with the maximum count of each character seen so far.  
+3. iterate through words1 and check if each word contains at least the required frequency of each character by comparing its frequency array with freq.  
+4. if a word satisfies the condition, add it to the result list.  
+
+time and space complexity  
+- time complexity: o(m * p + n * p), where m is the number of words in words2, n is the number of words in words1, and p is the average length of a word.  
+- space complexity: o(1), as the character frequency arrays are of fixed size (26).  
+
+code implementation  
+```java
+public List<String> wordSubsets(String[] words1, String[] words2) {
+    int freq[] = new int[26];
+    for (String word : words2) { // M
+        int temp[] = getFreq(word); // p
+        for (int i = 0; i < 26; i++) { // 26
+            freq[i] = Math.max(freq[i], temp[i]);
+        }
+    }
+    List<String> res = new ArrayList<>();
+    for (String word : words1) { // n
+        int temp[] = getFreq(word); // p
+        boolean flag = true;
+        for (int i = 0; i < 26; i++) { // 26
+            if (freq[i] > temp[i]) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            res.add(word);
+        }
+    }
+    return res;
+}
+
+public int[] getFreq(String word) {
+    int freq[] = new int[26];
+    for (int i = 0; i < word.length(); i++) {
+        freq[word.charAt(i) - 'a']++;
+    }
+    return freq;
+}
+```
